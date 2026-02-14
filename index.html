@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIAM RONE  Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a0a;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b35, #ff8c42);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .project-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border: 1px solid #2a2a2a;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .project-card:hover::before {
+            left: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #ff6b35;
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .skill-bar {
+            background: #1a1a1a;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skill-progress {
+            height: 12px;
+            background: linear-gradient(90deg, #ff6b35, #ff8c42);
+            border-radius: 20px;
+            transition: width 1.5s ease;
+            position: relative;
+        }
+
+        .skill-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.6); }
+        }
+
+        input, textarea {
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) rotate(10deg);
+            filter: drop-shadow(0 5px 15px rgba(255, 107, 53, 0.5));
+        }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="text-2xl font-bold gradient-text">Portfolio</div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="nav-link active text-white hover:text-orange-500" data-page="home">Home</a>
+                    <a href="#" class="nav-link text-white hover:text-orange-500" data-page="about">About</a>
+                    <a href="#" class="nav-link text-white hover:text-orange-500" data-page="projects">Projects</a>
+                    <a href="#" class="nav-link text-white hover:text-orange-500" data-page="contact">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-white" id="mobileMenuBtn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu fixed top-0 right-0 h-full w-64 bg-black/95 backdrop-blur-md md:hidden" id="mobileMenu">
+            <div class="flex flex-col p-8 space-y-6 mt-16">
+                <a href="#" class="nav-link text-white hover:text-orange-500 text-lg" data-page="home">Home</a>
+                <a href="#" class="nav-link text-white hover:text-orange-500 text-lg" data-page="about">About</a>
+                <a href="#" class="nav-link text-white hover:text-orange-500 text-lg" data-page="projects">Projects</a>
+                <a href="#" class="nav-link text-white hover:text-orange-500 text-lg" data-page="contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="min-h-screen flex items-center justify-center px-4 pt-16">
+            <div class="max-w-7xl mx-auto text-center">
+                <div class="floating mb-8">
+                    <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-orange-500 to-orange-600 glow flex items-center justify-center text-6xl">
+                        🚀
+                    </div>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    Hi, I'm <span class="gradient-text">SIAM RONE</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                    Creative Developer & Designer crafting beautiful digital experiences
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <button class="btn-primary px-8 py-4 rounded-full font-semibold text-white relative z-10" onclick="navigateTo('projects')">
+                        View My Work
+                    </button>
+                    <button class="px-8 py-4 rounded-full font-semibold border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all" onclick="navigateTo('contact')">
+                        Get In Touch
+                    </button>
+                </div>
+
+                <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="project-card p-8 rounded-2xl">
+                        <div class="text-5xl mb-4">💻</div>
+                        <h3 class="text-2xl font-bold mb-2 gradient-text">50+</h3>
+                        <p class="text-gray-400">Projects Completed</p>
+                    </div>
+                    <div class="project-card p-8 rounded-2xl">
+                        <div class="text-5xl mb-4">👥</div>
+                        <h3 class="text-2xl font-bold mb-2 gradient-text">30+</h3>
+                        <p class="text-gray-400">Happy Clients</p>
+                    </div>
+                    <div class="project-card p-8 rounded-2xl">
+                        <div class="text-5xl mb-4">⭐</div>
+                        <h3 class="text-2xl font-bold mb-2 gradient-text">2 Years</h3>
+                        <p class="text-gray-400">Experience</p>
+                    </div>
+                </div>
+
+                <div class="fute">
+
+                        <p class="text-gray-500 text-sm mt-12">
+                            &copy; 2024 SIAM RONE. All rights reserved.
+                        </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="min-h-screen px-4 pt-24 pb-16">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-5xl md:text-6xl font-bold mb-12 text-center">
+                    About <span class="gradient-text">Me</span>
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-12 mb-16">
+                    <div class="project-card p-8 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-6 gradient-text">Who I Am</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                            I'm a passionate full-stack developer with a keen eye for design. I love bringing ideas to life through code and creating seamless user experiences.
+                        </p>
+                        <p class="text-gray-300 text-lg leading-relaxed">
+                            With 5 years of experience in web development, I specialize in modern JavaScript frameworks, responsive design, and creative problem-solving.
+                        </p>
+                    </div>
+
+                    <div class="project-card p-8 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-6 gradient-text">What I Do</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4">🎨</span>
+                                <span class="text-gray-300 text-lg">UI/UX Design</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4">⚡</span>
+                                <span class="text-gray-300 text-lg">Frontend Development</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4">🔧</span>
+                                <span class="text-gray-300 text-lg">Backend Development</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4">📱</span>
+                                <span class="text-gray-300 text-lg">Responsive Design</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card p-8 rounded-2xl">
+                    <h3 class="text-3xl font-bold mb-8 gradient-text">Skills</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-lg">JavaScript / React</span>
+                                <span class="gradient-text font-semibold">95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-lg">HTML / CSS</span>
+                                <span class="gradient-text font-semibold">98%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-lg">Node.js / Express</span>
+                                <span class="gradient-text font-semibold">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-lg">UI/UX Design</span>
+                                <span class="gradient-text font-semibold">92%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-lg">Python / Django</span>
+                                <span class="gradient-text font-semibold">85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Page -->
+    <div id="projects" class="page">
+        <div class="min-h-screen px-4 pt-24 pb-16">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-5xl md:text-6xl font-bold mb-12 text-center">
+                    My <span class="gradient-text">Projects</span>
+                </h2>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project 1 -->
+                    <div class="project-card p-6 rounded-2xl">
+                        <div class="w-full h-48 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl mb-6 flex items-center justify-center text-6xl">
+                            🛍️
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 gradient-text">E-Commerce Platform</h3>
+                        <p class="text-gray-400 mb-4">
+                            A modern online shopping platform with real-time inventory, payment integration, and admin dashboard.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">React</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Node.js</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">MongoDB</span>
+                        </div>
+                        <button class="w-full btn-primary px-6 py-3 rounded-full font-semibold relative z-10">
+                            View Project
+                        </button>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card p-6 rounded-2xl">
+                        <div class="w-full h-48 bg-gradient-to-br from-orange-400 to-red-500 rounded-xl mb-6 flex items-center justify-center text-6xl">
+                            📱
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 gradient-text">Social Media App</h3>
+                        <p class="text-gray-400 mb-4">
+                            A feature-rich social networking platform with real-time messaging and content sharing.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">React Native</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Firebase</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Redux</span>
+                        </div>
+                        <button class="w-full btn-primary px-6 py-3 rounded-full font-semibold relative z-10">
+                            View Project
+                        </button>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card p-6 rounded-2xl">
+                        <div class="w-full h-48 bg-gradient-to-br from-orange-600 to-yellow-500 rounded-xl mb-6 flex items-center justify-center text-6xl">
+                            📊
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 gradient-text">Analytics Dashboard</h3>
+                        <p class="text-gray-400 mb-4">
+                            Interactive data visualization dashboard with real-time analytics and custom reports.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Vue.js</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">D3.js</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Python</span>
+                        </div>
+                        <button class="w-full btn-primary px-6 py-3 rounded-full font-semibold relative z-10">
+                            View Project
+                        </button>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="project-card p-6 rounded-2xl">
+                        <div class="w-full h-48 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl mb-6 flex items-center justify-center text-6xl">
+                            🎮
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 gradient-text">Gaming Platform</h3>
+                        <p class="text-gray-400 mb-4">
+                            Multiplayer gaming platform with leaderboards, achievements, and social features.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Unity</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">WebGL</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Socket.io</span>
+                        </div>
+                        <button class="w-full btn-primary px-6 py-3 rounded-full font-semibold relative z-10">
+                            View Project
+                        </button>
+                    </div>
+
+                    <!-- Project 5 -->
+                    <div class="project-card p-6 rounded-2xl">
+                        <div class="w-full h-48 bg-gradient-to-br from-orange-500 to-pink-500 rounded-xl mb-6 flex items-center justify-center text-6xl">
+                            🎵
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 gradient-text">Music Streaming App</h3>
+                        <p class="text-gray-400 mb-4">
+                            Spotify-like music streaming service with playlists, recommendations, and social sharing.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">React</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Express</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">PostgreSQL</span>
+                        </div>
+                        <button class="w-full btn-primary px-6 py-3 rounded-full font-semibold relative z-10">
+                            View Project
+                        </button>
+                    </div>
+
+                    <!-- Project 6 -->
+                    <div class="project-card p-6 rounded-2xl">
+                        <div class="w-full h-48 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl mb-6 flex items-center justify-center text-6xl">
+                            🍔
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 gradient-text">Food Delivery App</h3>
+                        <p class="text-gray-400 mb-4">
+                            Complete food ordering and delivery system with live tracking and payment integration.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Flutter</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Firebase</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-500 rounded-full text-sm">Stripe</span>
+                        </div>
+                        <button class="w-full btn-primary px-6 py-3 rounded-full font-semibold relative z-10">
+                            View Project
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="min-h-screen px-4 pt-24 pb-16">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-5xl md:text-6xl font-bold mb-12 text-center">
+                    Get In <span class="gradient-text">Touch</span>
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="project-card p-8 rounded-2xl">
+                        <div class="text-4xl mb-4">📧</div>
+                        <h3 class="text-xl font-bold mb-2 gradient-text">Email</h3>
+                        <p class="text-gray-400">alex.chen@example.com</p>
+                    </div>
+                    <div class="project-card p-8 rounded-2xl">
+                        <div class="text-4xl mb-4">📱</div>
+                        <h3 class="text-xl font-bold mb-2 gradient-text">Phone</h3>
+                        <p class="text-gray-400">+1 (555) 123-4567</p>
+                    </div>
+                    <div class="project-card p-8 rounded-2xl">
+                        <div class="text-4xl mb-4">📍</div>
+                        <h3 class="text-xl font-bold mb-2 gradient-text">Location</h3>
+                        <p class="text-gray-400">San Francisco, CA</p>
+                    </div>
+                    <div class="project-card p-8 rounded-2xl">
+                        <div class="text-4xl mb-4">🌐</div>
+                        <h3 class="text-xl font-bold mb-2 gradient-text">Social Media</h3>
+                        <div class="flex space-x-4 mt-4">
+                            <a href="#" class="social-icon text-2xl">💼</a>
+                            <a href="#" class="social-icon text-2xl">🐦</a>
+                            <a href="#" class="social-icon text-2xl">📷</a>
+                            <a href="#" class="social-icon text-2xl">💻</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card p-8 rounded-2xl">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Send a Message</h3>
+                    <form class="space-y-6" onsubmit="handleSubmit(event)">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Name</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-lg" placeholder="Your Name" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-gray-300">Email</label>
+                                <input type="email" class="w-full px-4 py-3 rounded-lg" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-300">Subject</label>
+                            <input type="text" class="w-full px-4 py-3 rounded-lg" placeholder="Subject" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-gray-300">Message</label>
+                            <textarea rows="6" class="w-full px-4 py-3 rounded-lg" placeholder="Your message..." required></textarea>
+                        </div>
+                        <button type="submit" class="w-full btn-primary px-8 py-4 rounded-full font-semibold relative z-10">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        function navigateTo(pageName) {
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            
+            navLinks.forEach(link => link.classList.remove('active'));
+            const activeLink = document.querySelector(`[data-page="${pageName}"]`);
+            if (activeLink) activeLink.classList.add('active');
+            
+            window.scrollTo(0, 0);
+            mobileMenu.classList.remove('active');
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageName = link.getAttribute('data-page');
+                navigateTo(pageName);
+            });
+        });
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+
+        // Form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('Thank you for your message! I\'ll get back to you soon.');
+            e.target.reset();
+        }
+
+        // Skill bar animation on About page
+        const aboutPage = document.getElementById('about');
+        const skillBars = document.querySelectorAll('.skill-progress');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    skillBars.forEach(bar => {
+                        const width = bar.style.width;
+                        bar.style.width = '0';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 100);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(aboutPage);
+    </script>
+</body>
+</html>
